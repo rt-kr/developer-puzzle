@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+import { BrowserModule, Title  } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { StocksAppConfigToken } from '@coding-challenge/stocks/data-access-app-config';
@@ -39,7 +39,9 @@ import { environment } from '../environments/environment';
     }),
     StocksDataAccessPriceQueryModule
   ],
-  providers: [{ provide: StocksAppConfigToken, useValue: environment }],
+  providers: [{ provide: StocksAppConfigToken, useValue: environment },
+    Title
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {}
