@@ -11,10 +11,12 @@ import {
   FetchPriceQuery,
   PriceQueryActionTypes,
   PriceQueryFetched,
-  PriceQueryFetchError
+  PriceQueryFetchError,
+  PriceQueryFilter
 } from './price-query.actions';
-import { PriceQueryPartialState } from './price-query.reducer';
+import { PriceQueryPartialState, PRICEQUERY_FEATURE_KEY } from './price-query.reducer';
 import { PriceQueryResponse } from './price-query.type';
+import { of } from 'rxjs';
 
 @Injectable()
 export class PriceQueryEffects {
@@ -22,15 +24,20 @@ export class PriceQueryEffects {
     PriceQueryActionTypes.FetchPriceQuery,
     {
       run: (action: FetchPriceQuery, state: PriceQueryPartialState) => {
-        return this.httpClient
-          .get(
-            `${this.env.apiURL}/beta/stock/${action.symbol}/chart/${
-              action.period
-            }?token=${this.env.apiKey}`
-          )
-          .pipe(
-            map(resp => new PriceQueryFetched(resp as PriceQueryResponse[]))
-          );
+        let apiFullUrl = '';
+        const range = 'max'; // range is max range for any symbol. Max data get stored in cache/store and date selector is applied on that       
+        apiFullUrl = `${this.env.apiURL}/beta/stock/${action.symbol}/chart/${range}}?range=${range}&token=${this.env.apiKey}`
+        if(action.symbol === state[PRICEQUERY_FEATURE_KEY].selectedSymbol){
+          return of(new PriceQueryFilter(action.symbol, action.fromDate, action.toDate));
+        }else{
+          return this.httpClient
+            .get(
+              apiFullUrl
+            )
+            .pipe(
+              map(resp => new PriceQueryFetched(resp as PriceQueryResponse[], action.symbol, action.fromDate, action.toDate))
+            );
+        }
       },
 
       onError: (action: FetchPriceQuery, error) => {
