@@ -29,7 +29,7 @@ export class PriceQueryEffects {
          * HAPI API accepts all range parameters e.g - %d, %m, %y
          * For caching optimization range is set to max
          */
-        const range = '1y'; // Change range =  'max'. For testing, range is kept 1 y.  
+        const range = 'max'; // range is max range for any symbol. Max data get stored in cache/store and date selector is applied on that    
         if(this.env.hapiService){
           apiFullUrl =  `${this.env.hapiServer}/getPriceQuery/${action.symbol}/${range}`;
         } else {
