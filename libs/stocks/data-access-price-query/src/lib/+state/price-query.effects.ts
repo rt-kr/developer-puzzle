@@ -25,7 +25,7 @@ export class PriceQueryEffects {
     {
       run: (action: FetchPriceQuery, state: PriceQueryPartialState) => {
         let apiFullUrl = '';
-        const range = '1y';        
+        const range = 'max'; // range is max range for any symbol. Max data get stored in cache/store and date selector is applied on that       
         apiFullUrl = `${this.env.apiURL}/beta/stock/${action.symbol}/chart/${range}}?range=${range}&token=${this.env.apiKey}`
         if(action.symbol === state[PRICEQUERY_FEATURE_KEY].selectedSymbol){
           return of(new PriceQueryFilter(action.symbol, action.fromDate, action.toDate));
